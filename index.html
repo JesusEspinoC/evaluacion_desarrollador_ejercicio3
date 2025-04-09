@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <title>Ejercicio 3</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12"><h2>Ejercicio 3</h2></div>
+            <div class="col-sm-12">
+                <form>
+                    <div class="form-group">
+                      <label for="txtNumero">Número</label>
+                      <input type="text" class="form-control" id="txtNumero" aria-describedby="numero" placeholder="Ingrese un número">
+                    </div>
+                    <button type="button" class="btn btn-primary mt-1" onclick="calcularFactorial();">Calcular</button>
+                  </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12"><h3>Resultado</h3></div>
+            <div class="col-sm-12" id="resultado"><h4>No se ha realizado un cálculo aun.</h4></div>
+        </div>
+    </div>
+</body>
+
+<script>
+
+    function calcularFactorial(){
+        let num = document.querySelector("#txtNumero").value;
+        // validar numero válido
+        if(isNaN(num)){
+            alert("Error! Ingrese un número valido.");
+            return;
+        }
+        // validar que sea numero natural, por regla la formula solo sirve para numeros naturales
+        if(num % 1 !== 0){
+            alert("Error! Solo se permiten numeros naturales (0, 1 ,2, ...) para este cálculo.");
+            return;
+        }
+
+        let requestOps = {
+            method: "GET"
+        }
+
+        // fetch para efectuar calculo e ingresarlo como innerhtml
+        fetch("http://localhost/evaluacion_desarrollador_ejercicio3/ajax/?action=factorial&numero="+num, requestOps)
+		  .then(response => response.json())
+		  .then(result => {
+            if(result.status == "OK" && !isNaN(result.resultado.resultado)){
+                let res = result.resultado;
+                let str_res = `<h4>Número capturado: ${res.numeroOriginal}, entonces: ${res.numeroOriginal}! = ${res.procedimiento} = ${res.resultado}.<br>El resultado es ${result.resultado.resultado}.</h4>`;
+                document.querySelector("#resultado").innerHTML = str_res;
+            }
+		  })
+		  .catch(error => console.log('error', error));
+    }
+
+</script>
+</html>
